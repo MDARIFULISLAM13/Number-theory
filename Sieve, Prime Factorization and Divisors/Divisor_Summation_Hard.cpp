@@ -15,10 +15,9 @@ using ll = long long int;
 #define du double
 #define ull unsigned long long
 #define vec vector<ll>
-const int lm = 1e6 + 123;
+const int lm = 1e8 + 123;
 bitset<lm> ip;
 vector<int> p;
-vector<int> cnt(1e6 + 123, 0);
 void arif(int n)
 {
     p.push_back(2);
@@ -37,41 +36,41 @@ void arif(int n)
         }
     }
     ip[2] = true;
-    cnt[2] = 1;
-    for (int i = 3; i <= n; i++)
+    for (int i = 3; i <= n; i += 2)
     {
         if (ip[i] == true)
         {
-            string s = to_string(i);
-            if (s.find('0') != string::npos)
-            {
-                cnt[i] = cnt[i - 1];
-                continue;
-            }
-
-            while (s.size() > 0)
-            {
-
-                s.erase(0, 1);
-                if (s.size() == 0)
-                {
-                    cnt[i] = cnt[i - 1] + 1;
-                    break;
-                }
-                int x = stoi(s);
-                if (ip[x] == false)
-                {
-                    cnt[i] = cnt[i - 1];
-
-                    break;
-                }
-            }
-        }
-        else
-        {
-            cnt[i] = cnt[i - 1];
+            p.push_back(i);
         }
     }
+}
+long long solve(ll n)
+{
+    ll ans = 1;
+    for (auto i : p)
+    {
+        if (1ll * i * i > n)
+        {
+            break;
+        }
+        if (n % i == 0)
+        {
+            ll sum = 1;
+            ll a = 1;
+            while (n % i == 0)
+            {
+                a *= i;
+                sum += a;
+                n /= i;
+            }
+            ans *= sum;
+        }
+    }
+    if (n > 1)
+    {
+        ans *= (n + 1);
+    }
+    return ans;
 }
 int main()
 {
@@ -79,14 +78,13 @@ int main()
     cin.tie(NULL);
     cout.tie(NULL);
     arif(lm);
-
     int n;
     cin >> n;
     while (n--)
     {
-        int v;
+        ll v;
         cin >> v;
-        cout << cnt[v] << endl;
+        cout << solve(v) - v << endl;
     }
 
     return 0;
